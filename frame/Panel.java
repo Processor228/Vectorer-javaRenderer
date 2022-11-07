@@ -34,9 +34,10 @@ public class Panel extends JPanel implements ActionListener{
     public Panel(){
         timer = new Timer(Delay, this);
         timer.start();
-        shapes.add(new Sphere(-2, 4, 20, 1, Color.BLUE));
-        shapes.add(new Sphere(0, -1, 50, 10, Color.GREEN));
-        lights.add(new Point3d(5, 20, 5));
+        shapes.add(new Sphere(20, 10, 200, 10, Color.GREEN));
+        shapes.add(new Sphere(25, 10, 130, 4, Color.BLUE));
+
+        lights.add(new Point3d(30, 10, 90));
     }
 
     public void drawPixel(Point2d p, Graphics g, Color c){
@@ -48,9 +49,9 @@ public class Panel extends JPanel implements ActionListener{
     @Override
     public void paintComponent(Graphics g){
         super.paintComponent(g);
-        time += 5;
-        shapes.get(1).pos.x += 5 * cos(time / 10);
-        shapes.get(1).pos.z -= 5 * sin(time / 10);
+        time += 2;
+        shapes.get(1).pos.x += cos(time / 10);
+        shapes.get(1).pos.z -= sin(time / 10);
         for(int x = 0; x < this.getWidth(); x++){
             for(int y = 0; y < this.getHeight(); y++){
                 Point3d pointPixel = new Point3d((x - this.getWidth()/2), (y - this.getHeight()/2), distanceToProjection);
@@ -66,13 +67,13 @@ public class Panel extends JPanel implements ActionListener{
                     if(distance.calculateLength() > 1 && distance.calculateLength() < closestDistance){
                         closestDistance = distance.calculateLength();
                         colorToBePrinted = shapes.get(i).getColor();
+                        // calculating how poor a part of a sphere is lighted.
                         degreeOfShader = calculateShader(intersection, shapes.get(i).pos);
                         for(int degree = 0; degree < degreeOfShader; degree++){
                             colorToBePrinted = colorToBePrinted.darker();
                         }
                     }
                 }
-//                System.out.println(degreeOfShader);
                 drawPixel(new Point2d(x, y), g, colorToBePrinted);
             }
         }
@@ -83,8 +84,24 @@ public class Panel extends JPanel implements ActionListener{
         int degreeOfDarkness = 0;
         for(int i = 0; i < lights.size(); i++) {
             Vector3d light = new Vector3d(intersection, lights.get(i));
+            boolean doesNotLightShape = false;
+            for(int sphere = 0; sphere < shapes.size(); sphere++){
+                if(shapes.get(sphere).pos == spherePos){
+                    continue;
+                }
+                Point3d intersectionWithAnotherShape = shapes.get(sphere).intersectTrace(lights.get(i), light.reversed());
+                Vector3d vectorOfIntersection = new Vector3d(lights.get(i), intersectionWithAnotherShape);
+
+                if(intersectionWithAnotherShape.x != Double.MAX_VALUE && vectorOfIntersection.calculateLength() < light.calculateLength()){
+                    doesNotLightShape = true;
+                    break;
+                }
+            }
+            if(doesNotLightShape){
+                degreeOfDarkness += 10;
+                continue;
+            }
             double cosine = normal.cos(light);
-//            System.out.print(cosine + ", ");
             if(cosine < 0){
                 degreeOfDarkness += 5;
                 break;
@@ -105,9 +122,7 @@ public class Panel extends JPanel implements ActionListener{
                 degreeOfDarkness += 1;
                 break;
             }
-//            degreeOfDarkness += 4;
         }
-//        System.out.println(degreeOfDarkness);
         return degreeOfDarkness;
     }
 

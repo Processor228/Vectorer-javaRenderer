@@ -32,6 +32,11 @@ public class Vector3d {
         return new Vector3d(x, y, z);
     }
 
+    public Vector3d reversed(){
+        return new Vector3d(-x, -y, -z);
+    }
+
+
     public double dot(Vector3d v2){
         return x * v2.x + y * v2.y + z * v2.z;
     }

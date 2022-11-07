@@ -43,27 +43,12 @@ public class window extends JFrame implements MouseListener, MouseMotionListener
 
     @Override
     public void mousePressed(MouseEvent e) {
-//        Point mouseLocation = e.getPoint();
-//        for(int i=0; i < mainPic.points.size(); i++){
-//            System.out.print(mainPic.points.get(i).x + " " + mouseLocation.x + " ");
-//            System.out.println(mainPic.points.get(i).y + " " + mouseLocation.y);
-//            if( sqrt(pow((mainPic.points.get(i).y - mouseLocation.y), 2) + pow((mainPic.points.get(i).x - mouseLocation.x), 2)) < 10){
-//                pointCatch = i;
-//                break;
-//            }
-//        }
+
     }
 
     @Override
     public void mouseReleased(MouseEvent e) {
-//        Point mouseLocation = e.getPoint();
-//        System.out.println(this.getX() + " " + this.getY());
-//        if(pointCatch != -1) {
-//            mainPic.points.get(pointCatch).y = mouseLocation.y;
-//            mainPic.points.get(pointCatch).x = mouseLocation.x;
-//            System.out.println(mainPic.points.get(pointCatch).x + " " + mainPic.points.get(pointCatch).y);
-//        }
-//        pointCatch = -1;
+
     }
 
     @Override
